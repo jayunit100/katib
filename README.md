@@ -124,7 +124,7 @@ ks generate pytorch-operator pytorch-operator
 ks apply ${KF_ENV} -c pytorch-operator
 ```
 
-### Katib
+### Running Katib
 
 Finally, you can install Katib
 
@@ -133,8 +133,10 @@ ks pkg install kubeflow/katib
 ks generate katib katib
 ks apply ${KF_ENV} -c katib
 ```
+#### Set up MySQL as a volume
 
-If you want to use Katib not in GKE and you don't have StorageClass for dynamic volume provisioning at your cluster, you have to create persistent volume to bound your persistent volume claim.
+Katbi needs a persistent volume for its MySQL storage layer.  If you want to use Katib without a default StorageClass for dynamic volume provisioning, you have to create a persistent volume to bound your persistent volume claim (note that, if you don't want to manually create volumes, you can easily run an NFS dynamic provisioner in almost any cluster using an example such as [this](https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md#in-kubernetes---deployment-of-1-replica). 
+
 
 This is yaml file for persistent volume
 
@@ -161,9 +163,11 @@ Create this pv after deploying Katib package
 kubectl create -f https://raw.githubusercontent.com/kubeflow/katib/master/manifests/pv/pv.yaml
 ```
 
-### Running examples
+#### Run the Katib examples
 
-After deploy everything, you can run examples.
+After deploying everything, you can run examples.
+
+#### TF Job Operator Example
 
 To run tfjob operator example, you have to install volume for it.
 
@@ -194,19 +198,19 @@ kubectl create -f https://raw.githubusercontent.com/kubeflow/katib/master/exampl
 kubectl create -f https://raw.githubusercontent.com/kubeflow/katib/master/examples/tfevent-volume/tfevent-pv.yaml
 ```
 
-This is example for tfjob operator
+This is the example for tfjob operator
 
 ```
 kubectl create -f https://raw.githubusercontent.com/kubeflow/katib/master/examples/tfjob-example.yaml
 ```
 
-This is example for pytorch operator
+This is the example for pytorch operator
 
 ```
 kubectl create -f https://raw.githubusercontent.com/kubeflow/katib/master/examples/pytorchjob-example.yaml
 ```
 
-You can check status of StudyJob
+Once running, you can check status of StudyJob
 
 ```yaml
 $ kubectl describe studyjob pytorchjob-example -n kubeflow
